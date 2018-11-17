@@ -35,5 +35,8 @@ class Ad:
         self.ad_description = ad_description
         self.ad_price = ad_price
         self.ad_id = str(uuid.uuid1())
+    def shouldBePersisted(self):
+        return True
+        # check that ad is not in db already and
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
