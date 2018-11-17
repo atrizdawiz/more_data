@@ -27,10 +27,10 @@ ad_title = parsed_ad.h2.contents[0]
 ad_description = parsed_ad.find(itemprop="description").contents[0]
 ad_price = parsed_ad.find(itemprop="price").contents[0]
 
-ad_html2 = urllib.request.urlopen(ad_url)
-image_html = SoupStrainer('div', {'class': 'showimage'})
-parsed_image_info = BeautifulSoup(ad_html2, 'html.parser', parse_only=image_html)
-ad_image_url = "http://vend.se/"+parsed_image_info.a.img['src']
+#ad_html2 = urllib.request.urlopen(ad_url)
+#image_html = SoupStrainer('div', {'class': 'showimage'})
+#parsed_image_info = BeautifulSoup(ad_html2, 'html.parser', parse_only=image_html)
+#ad_image_url = "http://vend.se/"+parsed_image_info.a.img['src']
 
 # Print ad variables
 #print("Title: "+ ad_title)
