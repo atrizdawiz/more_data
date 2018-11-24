@@ -1,0 +1,192 @@
+/**
+ *
+ * Misc.
+ *
+ */
+
+function showPic (whichpic) {
+  if (document.getElementById) {
+    document.getElementById('image').src = whichpic.href;
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function onAdSubmit(e) {
+  document.getElementById('ad-submit').setAttribute('disabled', 'true');
+  document.getElementById('ad-saving').style.display = 'block';
+}
+
+
+/**
+ *
+ * Mobile
+ *
+ */
+
+(function() {
+  // Hide list items in menu
+  if ($(window).width() < 668) {
+    $(function() {
+      $("#navigation li").click(function() {
+        if (false == $(this).children('ul').is(':visible')) {
+            $('#navigation li ul').slideUp(300);
+        }
+        $(this).children('ul').slideToggle(300);
+      });
+    });
+  }
+
+  // Hide top onscroll
+  var didScroll;
+  var lastScrollTop = 0;
+  var delta = 5;
+  var navbarHeight = $('.mobiletop').outerHeight();
+
+  $(window).scroll(function(event){
+      didScroll = true;
+  });
+
+  setInterval(function() {
+    if (didScroll) {
+      hasScrolled();
+      didScroll = false;
+    }
+  }, 250);
+
+  function hasScrolled() {
+    var st = $(this).scrollTop();
+
+    if(Math.abs(lastScrollTop - st) <= delta)
+      return;
+
+    if (st > lastScrollTop && st > navbarHeight){
+      $('.mobiletop').removeClass('nav-down').addClass('nav-up');
+    } else {
+      if(st + $(window).height() < $(document).height()) {
+          $('.mobiletop').removeClass('nav-up').addClass('nav-down');
+      }
+    }
+
+    lastScrollTop = st;
+  }
+}());
+
+// Mobile menu
+$(".burger-menu").click(function () {
+  $(this).toggleClass("menu-on");
+  $('#menu').fadeToggle(100);
+  $('#menu ul').fadeToggle(400);
+  $('body').toggleClass("noscroll");
+  $('#navigation').toggle();
+});
+
+/**
+ *
+ * Studio widget
+ *
+ */
+
+!function(){function e(e,f){var i=f&&f.blank,r=i?o:n;if((!f||!f.noCache)&&e in r)return r[e];var u=JSON.stringify(e).replace(/#\{(.*?)\}/g,function(e,n){return'"+(typeof obj["'+n+'"]!="undefined"?obj["'+n+'"]:"'+(i?"":e)+'")+"'});return r[e]=Function("obj",(i?t:"")+"return "+u)}var n={},o={},t='if (typeof obj == "undefined") obj = {}; ';"object"==typeof module&&module.exports?module.exports=e:"function"==typeof define&&define.amd?define(function(){return e}):"object"==typeof window&&(window.fmt=e)}();
+
+!function(e){"use strict";function t(e){var t,u=n(e.units),o=Date.now(),f=r(e.from,u,o),a=r(e.to,u,o),s=f-a;return s>=0?t="past":(t="future",s=-s),i(s,t,e.lang)}function n(e){if("undefined"==typeof e)return"ms";if("s"===e||"ms"===e)return e;throw new Error("Invalid units")}function r(e,t,n){if("undefined"==typeof e)return n;if("string"==typeof e&&(e=parseInt(e,10)),u(e)&&o(e))throw new Error("Invalid time");return"number"==typeof e&&"s"===t&&(e*=1e3),e}function u(e){return"[object Date]"!==Object.prototype.toString.call(e)||isNaN(e.getTime())}function o(e){return"number"!=typeof e||isNaN(e)}function i(e,t,n){var r,u,o=s[n]||s[d];for(r in a)if(a.hasOwnProperty(r)&&e>=a[r])return u=Math.floor(e/a[r]),o[t](u,o[r][(u>1)+0]);return o.defaults[t]}function f(){"function"==typeof define&&define.amd?define("vagueTime",["exports"],function(e){e.get=m.get}):"undefined"!=typeof module&&null!==module?module.exports=m:e.vagueTime=m}var a={year:315576e5,month:26298e5,week:6048e5,day:864e5,hour:36e5,minute:6e4},s={se:{year:["år","år"],month:["månad","månader"],week:["vecka","veckor"],day:["dag","dagar"],hour:["timme","timmar"],minute:["minut","minuter"],past:function(e,t){return e+" "+t+" sedan"},future:function(e,t){return"om "+e+" "+t},defaults:{past:"alldeles nyss",future:"alldeles strax"}}},d="se",m={get:t};f()}(this);
+
+var Studio,
+  bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+
+Studio = (function() {
+  var tmpl, url;
+
+  function Studio(el) {
+    this.el = el;
+    this.render = bind(this.render, this);
+    this.fetch();
+  }
+
+  url = 'https://studio.idg.se/1.650425/?m=json';
+
+  tmpl = {
+    article: fmt('<li class="article"><a href="#{articleLink}?ref=vend" target="_blank">#{image}#{title}</a><span class="article-date">#{date}</span></li>'),
+    image: fmt('<img class="article-image" src="#{teaserImageUrl}">')
+  };
+
+  Studio.prototype.fetch = function() {
+    var request = new XMLHttpRequest();
+    var self = this;
+    request.open('GET', url, true);
+
+    request.onreadystatechange = function() {
+      if (this.readyState === 4) {
+        if (this.status >= 200 && this.status < 400) {
+          var data = JSON.parse(this.responseText);
+          //console.log(data);
+          self.render('article', data.articles)
+        } else {
+        }
+      }
+    };
+    request.send();
+    request = null;
+  };
+
+  Studio.prototype.parseDate = function (str) {
+    //"2016-02-01T10:34:11+0100"
+    return new Date(str.substr(0, 19))
+  };
+
+  Studio.prototype.render = function(template, data) {
+    var date, i, len, row, count = 0;
+    html = []
+    for (k in data) {
+      if (count === 4) { break; }
+      row = data[k];
+      if (row.teaserImageUrl) {
+        //row.teaserImageUrl = row.teaserImageUrl.replace(/^http/, 'https');
+        row.image = tmpl['image'](row);
+      }
+      date = this.parseDate(row.publicationDate);
+      row.date = vagueTime.get({
+        to: date,
+        units: 's'
+      });
+      html.push(tmpl[template](row));
+      count++;
+    }
+    this.el.innerHTML += html.join('');
+  };
+
+  return Studio;
+
+})();
+
+/**
+ *
+ * Auto complete
+ *
+ */
+
+$("#brand").easyAutocomplete({
+  url: function(phrase) {
+    return "brandSearch.php?q=" + phrase;
+  },
+  requestDelay: 300,
+  getValue: "name"
+});
+$("#brand_model").easyAutocomplete({
+  url: function(phrase) {
+    var brand = $('#brand')[0].value;
+    if (brand) {
+      return "brandSearch.php?type=model&brand=" + brand + "&q=" + phrase;
+    } else {
+      return "brandSearch.php?type=model&q=" + phrase;
+    }
+  },
+  requestDelay: 300,
+  getValue: "name"
+});
+
+$("img.lazy").lazyload({
+  threshold : 50,
+  effect: 'fadeIn'
+});
