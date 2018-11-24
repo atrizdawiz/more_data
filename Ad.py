@@ -54,18 +54,21 @@ class Ad:
         self.ad_type = ad_type
         print(ad_title + ad_description + ad_price + ad_id + ad_type)
 
-    def interesting_ad(self):
-        keywords = ["roland mks-20", "mutron", "yamaha dx7", "Avalon"]
-        for x in keywords:
-            if x in self.ad_title or x in self.ad_description:
+    def someKeywordHits(self):
+        keywords = ["YamAhA"]
+        lower_case_keywords = [x.lower() for x in keywords]
+        for x in lower_case_keywords:
+            if x in self.ad_title.lower().split(" ") or x in self.ad_description.lower().split(" "):
                 print("Ad has relevant keywords!")
                 return True
             else:
                 return False
                 
     def shouldBePersisted(self):
-        if self.ad_type == "typeS" and self.interesting_ad():
-            return True
-        # check that ad is not in db already and
+        if self.ad_type == "typeS":
+            return self.someKeywordHits()
+        else:
+            return False
+            
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
