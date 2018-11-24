@@ -15,7 +15,7 @@ class test_client:
         self.ad_type = None
         #self.ad_image_url = ad_image_url    
     def update_test(self):
-        filepath = Path("C:/Repos/more_data/test_data/annons.html")
+        filepath = Path("./test_data/annons.html")
         filtered_ad_html = SoupStrainer('div', {'class': 'section'})
         ad_type = "typeS"
         with open(filepath, 'rb') as html:
