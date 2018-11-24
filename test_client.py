@@ -13,6 +13,7 @@ class test_client:
         self.ad_price = None
         self.ad_id = None
         self.ad_type = None
+        self.ad_id = str(uuid.uuid1())
         #self.ad_image_url = ad_image_url    
     def update_test(self):
         filepath = Path("./test_data/annons.html")
@@ -30,7 +31,6 @@ class test_client:
             self.ad_title = ad_title
             self.ad_description = ad_description
             self.ad_price = ad_price
-            self.ad_id = str(uuid.uuid1())
             self.ad_type = ad_type
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)

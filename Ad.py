@@ -9,7 +9,7 @@ class Ad:
         self.ad_title = None
         self.ad_description = None
         self.ad_price = None
-        self.ad_id = None
+        self.ad_id = str(uuid.uuid1())
         self.ad_type = None
         #self.ad_image_url = ad_image_url    
 
@@ -50,9 +50,7 @@ class Ad:
         self.ad_title = ad_title
         self.ad_description = ad_description
         self.ad_price = ad_price
-        self.ad_id = str(uuid.uuid1())
         self.ad_type = ad_type
-        print(ad_title + ad_description + ad_price + ad_id + ad_type)
 
     def someKeywordHits(self):
         keywords = ["YamAhA"]
@@ -65,7 +63,7 @@ class Ad:
                 return False
                 
     def shouldBePersisted(self):
-        if self.ad_type == "typeS":
+        if self.ad_type == "typeS" and self.ad_id:
             return self.someKeywordHits()
         else:
             return False
