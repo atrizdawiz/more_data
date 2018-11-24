@@ -34,7 +34,7 @@ class test_client:
             self.ad_type = ad_type
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-    def some_keyword_hits(self):
+    def someKeywordHits(self):
         keywords = ["YamAhA"]
         lower_case_keywords = [x.lower() for x in keywords]
         for x in lower_case_keywords:
@@ -46,6 +46,6 @@ class test_client:
                 
     def shouldBePersisted(self):
         if self.ad_type == "typeS":
-            return self.some_keyword_hits()
+            return self.someKeywordHits()
         else:
             return False
