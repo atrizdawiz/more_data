@@ -5,8 +5,9 @@ import urllib.request
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 from pathlib import Path
+
 class test_client:
-    
+
     def __init__(self):
         self.ad_title = None
         self.ad_description = None
@@ -48,4 +49,5 @@ class test_client:
         if self.ad_type == "typeS":
             return self.someKeywordHits()
         else:
+            print("No keywords matched")
             return False

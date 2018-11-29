@@ -1,4 +1,11 @@
 .vscode
 !/.gitignore
-__pycache__
+__pycache__/
 ddb.sh
+venv
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+media
